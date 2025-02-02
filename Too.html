@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta San Valentín</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ffe6e6;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      position: relative;
+    }
+    h1 {
+      color: #ff4d4d;
+      font-size: 36px;
+      margin-top: 100px;
+    }
+    .btn {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin: 20px;
+      cursor: pointer;
+      border: 2px solid #ff4d4d;
+      background-color: white;
+      color: #ff4d4d;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .btn:hover {
+      background-color: #ff4d4d;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* Corazón con CSS */
+    .heart {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #ff4d4d;
+      transform: rotate(45deg);
+      opacity: 0;
+      animation: heartAnimation 5s linear infinite;
+    }
+    .heart:before, .heart:after {
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #ff4d4d;
+      border-radius: 50%;
+    }
+    .heart:before {
+      left: 50px;
+    }
+    .heart:after {
+      top: 50px;
+    }
+
+    /* Animación de los corazones */
+    @keyframes heartAnimation {
+      0% {
+        transform: translateY(-100px) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(405deg);
+        opacity: 0;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+    .image {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>¿Quieres ser mi San Valentín?</h1>
+
+  <button class="btn" id="yesBtn">Sí</button>
+  <button class="btn" id="noBtn">No</button>
+
+  <!-- Imagen inicial (osito) -->
+  <div id="imageContainer" class="hidden">
+    <img src="https://fcbkstickers.com/_data/stickers/sugar_cubs_in_love/png/01/sugar_cubs_in_love__01___005.png" alt="Imagen Inicial" class="image"> <!-- Imagen inicial (osito) -->
+  </div>
+
+  <!-- Imagen cuando acepten -->
+  <div id="heartContainer" class="hidden">
+    <img src="https://i.pinimg.com/236x/ac/a8/e4/aca8e41a290576bd50898a64642bb44d.jpg" alt="Imagen Final" class="image"> <!-- Imagen Final -->
+  </div>
+
+  <script>
+    let noCounter = 0;
+
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const imageContainer = document.getElementById('imageContainer');
+    const heartContainer = document.getElementById('heartContainer');
+
+    // Mostrar la imagen inicial (osito)
+    imageContainer.classList.remove('hidden');
+
+    yesBtn.addEventListener('click', () => {
+      // Muestra los corazones y la imagen final
+      createHearts();
+      heartContainer.classList.remove('hidden');
+      imageContainer.classList.add('hidden'); // Oculta la imagen inicial (osito)
+      document.body.innerHTML += '<h1>¡Sabía que aceptarías mi osita linda!</h1>';
+    });
+
+    noBtn.addEventListener('click', () => {
+      if (noCounter < 3) {
+        // Mueve el botón "No" las primeras tres veces
+        moveButtonRandomly();
+        noCounter++;
+      } else if (noCounter === 3) {
+        // Después de tres clics, el botón se queda fijo
+        noBtn.style.position = 'absolute';
+        noBtn.style.left = '50%';
+        noBtn.style.transform = 'translateX(-50%)';
+        noBtn.textContent = '¿Estás segura?';
+        noCounter++;
+      } else if (noCounter === 4) {
+        // Después de la cuarta vez, cambia el texto
+        noBtn.textContent = 'Segurísima';
+        noCounter++;
+      } else if (noCounter > 4) {
+        // Desaparece el botón "No"
+        noBtn.classList.add('hidden'); // Hace que el botón "No" desaparezca
+        noBtn.disabled = true;
+      }
+    });
+
+    function moveButtonRandomly() {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      // Calcula una posición aleatoria dentro de los límites de la pantalla
+      const randomX = Math.random() * (screenWidth - noBtn.offsetWidth); // Evita que se salga por los bordes
+      const randomY = Math.random() * (screenHeight - noBtn.offsetHeight);
+
+      // Aplica la nueva posición aleatoria
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = `${randomX}px`;
+      noBtn.style.top = `${randomY}px`;
+    }
+
+    function createHearts() {
+      const totalHearts = 20; // Número de corazones que caen
+
+      for (let i = 0; i < totalHearts; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = `${Math.random() * 100}%`; // Posición aleatoria en el eje X
+        heart.style.animationDuration = `${Math.random() * 3 + 2}s`; // Duración aleatoria de la caída
+
+        document.body.appendChild(heart);
+        setTimeout(() => {
+          heart.remove();
+        }, 5000); // El corazón desaparece después de 5 segundos
+      }
+    }
+  </script>
+</body>
+</html>
